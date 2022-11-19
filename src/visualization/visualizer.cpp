@@ -30,7 +30,7 @@ static vector<array<int, 3>> COLORS;
 
 Visualizer::Visualizer(QWidget* parent)
     : QGLViewer(parent), AbstractClient<Cloud>(), _updated{false} {
-  _cloud_obj_storer.SetUpdateListener(this);
+  _cloud_obj_storer.SetUpdateListener(this);  //草
 }
 
 void Visualizer::draw() {
@@ -46,9 +46,9 @@ void Visualizer::draw() {
     Eigen::Vector3f min_point(std::numeric_limits<float>::max(),
                               std::numeric_limits<float>::max(),
                               std::numeric_limits<float>::max());
-    for (const auto& point : cluster.points()) {
+    for (const auto& point : cluster.points()) {  // 这里！！！ 找到中心
       center = center + point.AsEigenVector();
-      min_point << std::min(min_point.x(), point.x()),
+      min_point << std::min(min_point.x(), point.x()),  // 这里！ 找边界！
           std::min(min_point.y(), point.y()),
           std::min(min_point.z(), point.z());
       max_point << std::max(max_point.x(), point.x()),
@@ -132,19 +132,20 @@ void Visualizer::DrawCube(const Eigen::Vector3f& center,
 
 Visualizer::~Visualizer() {}
 
-void Visualizer::OnNewObjectReceived(const Cloud& cloud, const int) {
+void Visualizer::OnNewObjectReceived(const Cloud& cloud,
+                                     const int) {  // 似乎用于给出全点云
   lock_guard<mutex> guard(_cloud_mutex);
   _cloud = cloud;
 }
 
 void Visualizer::onUpdate() { this->update(); }
 
-unordered_map<uint16_t, Cloud> ObjectPtrStorer::object_clouds() const {
+unordered_map<uint16_t, Cloud> ObjectPtrStorer::object_clouds() const { 
   lock_guard<mutex> guard(_cluster_mutex);
   return _obj_clouds;
 }
 
-void ObjectPtrStorer::OnNewObjectReceived(
+void ObjectPtrStorer::OnNewObjectReceived(  // here, get clusters as an observer
     const unordered_map<uint16_t, Cloud>& clouds, const int) {
   lock_guard<mutex> guard(_cluster_mutex);
   _obj_clouds = clouds;

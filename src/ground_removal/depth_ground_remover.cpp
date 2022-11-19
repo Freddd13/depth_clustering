@@ -56,7 +56,7 @@ void DepthGroundRemover::OnNewObjectReceived(const Cloud& cloud, const int) {
   auto no_ground_image = ZeroOutGroundBFS(depth_image, smoothed_image,
                                           _ground_remove_angle, _window_size);
   fprintf(stderr, "INFO: Ground removed in %lu us\n", total_timer.measure());
-  cloud_copy.projection_ptr()->depth_image() = no_ground_image;
+  cloud_copy.projection_ptr()->depth_image() = no_ground_image; // 更新了no_ground_image。ground的地方为0
   this->ShareDataWithAllClients(cloud_copy);
   _counter++;
 }

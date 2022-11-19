@@ -132,7 +132,7 @@ class ImageBasedClusterer : public AbstractClusterer {
         }
         for (const auto& point_idx : point_container.points()) {
           const auto& point = cloud.points()[point_idx];
-          clusters[label].push_back(point);
+          clusters[label].push_back(point); //TODO get center pair
         }
       }
     }
@@ -140,7 +140,7 @@ class ImageBasedClusterer : public AbstractClusterer {
     // filter out unfitting clusters
     std::vector<uint16_t> labels_to_erase;
     for (const auto& kv : clusters) {
-      const auto& cluster = kv.second;
+      const auto& cluster = kv.second;  //TODO 可以在这里加距离宽松限制，但还是要找到center
       if (cluster.size() < this->_min_cluster_size ||
           cluster.size() > this->_max_cluster_size) {
         labels_to_erase.push_back(kv.first);
@@ -152,7 +152,7 @@ class ImageBasedClusterer : public AbstractClusterer {
 
     fprintf(stderr, "INFO: prepared clusters in: %lu us\n", timer.measure());
 
-    this->ShareDataWithAllClients(clusters);
+    this->ShareDataWithAllClients(clusters);  // 向observer发送的clusters只有它聚类到的
     fprintf(stderr, "INFO: clusters shared: %lu us\n", timer.measure());
   }
 

@@ -53,7 +53,7 @@ include(CTest)
 IF(IS_DIRECTORY "/usr/src/gtest/")
   MESSAGE(STATUS "Found google test sources in /usr/src/gtest/")
 
-  ADD_SUBDIRECTORY(/usr/src/gtest/ gtest)
+  # ADD_SUBDIRECTORY(/usr/src/gtest/ gtest)
 
   # mimick the behaviour of find_package(GTest)
   SET(GTEST_FOUND TRUE)
